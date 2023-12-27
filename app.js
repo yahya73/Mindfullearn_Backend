@@ -17,7 +17,9 @@ const io = new Server(httpServer);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
+const corsOptions = {
+  origin: 'http:/172.20.10.5:3000',
+};
 
 dotenv.config();
 
@@ -25,7 +27,7 @@ const hostname = process.env.SERVERURL;
 const port = process.env.SERVERPORT;
 const connectedUsers = new Map();
 app.use(morgan("dev"));
-
+app.use(cors(corsOptions));
 connectDb();
 
 app.use(express.json());
@@ -53,7 +55,22 @@ io.on('connection', (socket) => {
     connectedUsers.set(userId, socket.id);
 });
   socket.on('sendMessage', (messageData) => {
-    addOnceMessage(messageData)
+    try {
+      const parsedData = JSON.parse(messageData);
+      // Assuming `addOnceMessage` function requires `req` and `res` parameters
+      const fakeReq = { body: parsedData }; // Creating a fake req object
+      const fakeRes = {
+        json: (data) => {
+          console.log(data); // Output the result or handle as needed
+        },
+        status: () => ({ json: (error) => console.error(error) }),
+      }; // Creating a fake res object
+  
+      addOnceMessage(fakeReq, fakeRes); // Invoking addOnceMessage function
+    } catch (error) {
+      console.error('Error parsing JSON data:', error);
+    }
+   // addOnceMessage(messageData[0])
           /*  .then((newMessage) => {
                 // Emit an event back to the client or do something else with the new message
                 socket.emit('receiveMessage', messageData);
@@ -82,5 +99,5 @@ io.on('connection', (socket) => {
   });
 });
 httpServer.listen(port, () => {
-  console.log(`Server running on ${port}`);
+  console.log(`Server running on :${port}`);
 });
