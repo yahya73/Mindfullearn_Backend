@@ -21,6 +21,7 @@ function sendForgotPasswordEmail(email) {
         if (error) {
             console.error(error);
         } else {
+            console.log("Email sent")
             console.log('Email sent: ' + info.response);
         }
     });

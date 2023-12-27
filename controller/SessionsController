@@ -1,0 +1,34 @@
+import Session from "../model/sessions.js";
+
+// Create a new session
+export async function getAllSessions(req, res) {
+    await Session.find({})
+  
+      .then(docs => {
+          res.json(docs);
+      })
+      .catch(err => {
+          res.status(500).json({ error: err });
+      });
+  }
+
+
+// Update a session
+export async function Updatesessions(req, res) {
+  try {
+    const { Id, clientID, coachID,  sessiondate,Transfered } = req.body;
+    const session = await Session.findById(req.params.id);
+    if (!session) {
+      return res.status(404).json({ message: 'Session not found' });
+    }
+    session.sessionId = Id;
+    session.clientID = clientID;
+    session.coachID = coachID;
+    session.sessiondate = sessiondate;
+    session.Transfered = Transfered;
+    await session.save();
+    res.status(200).json({ message: 'Session updated successfully', session });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}

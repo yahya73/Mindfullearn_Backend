@@ -52,6 +52,8 @@ const userController = {
                 role,
                 dateOfBirth,
                 password,
+                latitude,
+                longitude,
             } = req.body;
 
             if (!userId) {
@@ -69,7 +71,19 @@ const userController = {
                     message: "User not found",
                 });
             }
-
+             if(user.role == "Tuteur"){
+                user.firstname = firstname || user.firstname;
+                user.lastname = lastname || user.lastname;
+                user.email = email || user.email;
+                user.image = image || user.image;
+                user.role = role || user.role;
+                user.dateOfBirth = dateOfBirth || user.dateOfBirth;
+                user.password = password || user.password;
+                user.latitude = latitude || user.latitude;
+                user.longitude = longitude || user.longitude;
+                await user.save();
+             }
+             else{
             user.firstname = firstname || user.firstname;
             user.lastname = lastname || user.lastname;
             user.email = email || user.email;
@@ -79,7 +93,7 @@ const userController = {
             user.password = password || user.password;
 
             await user.save();
-
+             }
             return res.status(200).json({
                 statusCode: 200,
                 message: "User updated",
@@ -93,10 +107,13 @@ const userController = {
             });
         }
     },
-    fetchUser: async (req, res) => {
+    fetchUserAdmin: async (req, res) => {
         try {
-            const userId = req.params.id;
-            const user = await User.findById(userId);
+            console.log(req.body.email)
+            const email = req.body.email;
+
+            const user = await User.findOne({email});
+            console.log(user)
 
             if (!user) {
                 return res.status(404).json({
@@ -109,7 +126,7 @@ const userController = {
                 statusCode: 200,
                 message: "User fetched successfully",
                 role: user.role,
-                __id : user.id,
+                _id : user.id,
                 firstname : user.firstname,
                 lastname : user.lastname,
                 email : user.email,
@@ -123,6 +140,28 @@ const userController = {
 
 
             });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                statusCode: 500,
+                message: "Internal server error",
+            });
+        }
+    },
+
+    fetchUser: async (req, res) => {
+        try {
+            const userId = req.params.id;
+            const user = await User.findById(userId);
+
+            if (!user) {
+                return res.status(404).json({
+                    statusCode: 404,
+                    message: "User not found",
+                });
+            }
+
+            return res.status(200).json(user);
         } catch (error) {
             console.error(error);
             return res.status(500).json({
@@ -300,7 +339,7 @@ const userController = {
              const {email, password} = req.body;
              console.log(password)
              const user = await User.findOne({email});
-             user.password = password || user.password;
+             user.password = await bcrypt.hash(password, 10);
              await user.save();
      
              return res.status(200).json({

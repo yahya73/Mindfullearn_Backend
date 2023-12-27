@@ -9,7 +9,14 @@ mongoose.Promise = global.Promise;
 
 const connectDb = () => {
   mongoose
-    .connect(`mongodb://${databaseURL}/${databaseName}`)
+    .connect(`mongodb+srv://ihebdebbech20:ihebdebbech20@devdb.c6atpkg.mongodb.net/Mindfulllearn?retryWrites=true&w=majority`,{
+
+    serverApi: {
+      version:'1',
+      strict: true,
+      deprecationErrors: true,
+    }
+    })
     .then(() => {
       console.log("Connected to database");
     })

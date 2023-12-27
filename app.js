@@ -17,9 +17,7 @@ const io = new Server(httpServer);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const corsOptions = {
-  origin: 'http:/172.18.6.106:3000',
-};
+
 
 dotenv.config();
 
@@ -27,7 +25,7 @@ const hostname = process.env.SERVERURL;
 const port = process.env.SERVERPORT;
 const connectedUsers = new Map();
 app.use(morgan("dev"));
-app.use(cors(corsOptions));
+
 connectDb();
 
 app.use(express.json());
@@ -70,7 +68,7 @@ io.on('connection', (socket) => {
         if (receiverSocketId) {
           console.log('ReceiverSocket')
             io.to(receiverSocketId).emit('receiveMessage', messageData);
-            socket.emit('receiveMessage', messageData);
+           // socket.emit('receiveMessage', messageData);
         } else {
           
           socket.emit('receiveMessage', messageData);
@@ -83,6 +81,6 @@ io.on('connection', (socket) => {
     console.log('A user disconnected');
   });
 });
-httpServer.listen(port, hostname, () => {
-  console.log(`Server running on ${hostname}:${port}`);
+httpServer.listen(port, () => {
+  console.log(`Server running on ${port}`);
 });
