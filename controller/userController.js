@@ -28,8 +28,7 @@ const userController = {
             await user.save();
 
             return res.status(201).json({
-                statusCode: 201,
-                message: "User created",
+              
                 user: user,
             });
         } catch (error) {
@@ -241,7 +240,7 @@ const userController = {
 
         const token = jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: "1d"});
 
-        sendTestEmail();
+       // sendTestEmail();
 
         return res.status(200).json({
             statusCode: 200,
