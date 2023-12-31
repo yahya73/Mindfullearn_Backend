@@ -243,8 +243,7 @@ const userController = {
        // sendTestEmail();
 
         return res.status(200).json({
-            statusCode: 200,
-            message: token.toString(),
+            
             role: user.role,
             __id: user.id,
             firstname: user.firstname,
