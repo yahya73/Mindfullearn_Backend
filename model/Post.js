@@ -5,6 +5,11 @@ const commentSchema = new mongoose.Schema({
     type: String, // Assuming user is identified by username
     required: true,
   },
+  UserImage:{
+
+    type: String,
+    reauired:false,
+  },
   content: {
     type: String,
     required: true,
