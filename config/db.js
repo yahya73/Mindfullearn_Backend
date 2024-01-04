@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 
 const connectDb = () => {
   mongoose
-    .connect(`mongodb+srv://ihebdebbech20:ihebdebbech20@devdb.c6atpkg.mongodb.net/Mindfulllearn?retryWrites=true&w=majority`,{
+    .connect(process.env.DBURL,{
 
     serverApi: {
       version:'1',

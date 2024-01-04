@@ -1,16 +1,19 @@
 import express from "express";
 import userController from "../controller/userController.js";
 import postController from "../controller/postController.js";
+import middleware from "../Midlleware/midd.js";
 import { fetchconversations,getAllMessages,addOnceMessage,deleteOnceMessage,getOnceMessage ,getAllSessions2,Updatesessions2,getMessagesBySenderAndRecipient} from '../controller/messageController.js';
 //import {getAllSessions,Updatesessions} from "../controller/SessionsController.js";
 
 const router = express.Router();
 
-router.post("/user/add", userController.createUser);
+router.post("/user/add",userController.createUser);
 router.put("/user/update/:id", userController.updateUser);
 router.get("/user/find/:id", userController.fetchUser);
 router.get("/sessions/getallsessions", getAllSessions2);
-router.get("/users", userController.fetchAllUsers);
+router.get("/users",middleware.verifyTokenAndAdmin, userController.fetchAllUsers);
+router.put("/users/:id/ban", userController.toggleBannedStatus);
+
 
 router.get("/tuteur", userController.findtuteur); // Corrected function name
  // Corrected function name
@@ -18,7 +21,7 @@ router.get("/tuteur", userController.findtuteur); // Corrected function name
 router.post("/user/forgotpassword/getcode", userController.forgotPassword_GetCode)
 router.put("/user/password", userController.ChangePassword);
 router.put("/sessions/updatesessions", Updatesessions2);
-router.delete("/user/:id", userController.deleteUser);
+router.delete("/user/:id", middleware.verifyTokenAndAdmin,userController.deleteUser);
 router.post("/useradmin", userController.fetchUserAdmin);
 router.post("/user/login", userController.login)
 router

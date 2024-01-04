@@ -169,6 +169,37 @@ const userController = {
             });
         }
     },
+     toggleBannedStatus : async (req, res) => {
+        try {
+            const userId = req.params.id;
+            const user = await User.findById(userId);
+    
+            if (!user) {
+                return res.status(404).json({
+                    statusCode: 404,
+                    message: "User not found",
+                });
+            }
+    
+            // Toggle the 'isBanned' field
+            user.isBanned = !user.isBanned;
+    
+            // Save the updated user
+            await user.save();
+    
+            return res.status(200).json({
+                statusCode: 200,
+                message: `Banned status toggled for user with ID ${userId}`,
+                isBanned: user.isBanned,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                statusCode: 500,
+                message: "Internal server error",
+            });
+        }
+    },
 
     fetchAllUsers: async (req, res) => {
         try {
