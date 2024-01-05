@@ -13,7 +13,8 @@ router.get("/user/find/:id", userController.fetchUser);
 router.get("/sessions/getallsessions", getAllSessions2);
 router.get("/users",middleware.verifyTokenAndAdmin, userController.fetchAllUsers);
 router.put("/users/:id/ban", userController.toggleBannedStatus);
-
+router.get('/Sorted', postController.getAllPostsSorted);
+router.get('/reelsSorted', postController.getAllPostsByTypeSorted);
 
 router.get("/tuteur", userController.findtuteur); // Corrected function name
  // Corrected function name
